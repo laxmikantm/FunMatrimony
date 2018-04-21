@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+}
+
+section, .cat-count #cat-count {
+    font-size: 20px;
+    color: purple;
+}
+
+
+h1 {
+    font-family: Verdana;
+    text-align: center;
+    font-style: normal;
+}
+
+#cat-img{
+    border-style: dashed;
+    border-color: navy;
+    border-radius: 30px 80px; /* To make the rounded corners*/
+}
+
+nav{
+
+    position: fixed;
+    top:0;
+    background-color: cadetblue;
+    left: 0;
+    background: #fafafa;
+    border-bottom: 2px solid #ccc;
+    height: 70px;
+    width: 100%;
+}
+
+/*.page-header, footer {*/
+.page-header {
+    position: fixed;
+    overflow: hidden;
+
+    height: 60px;
+    padding-bottom: 0;
+    border-bottom-width: 0;
+    background-color: #8151b0;
+    width: 100%;
+    margin: 0;
+}
+
+@media screen and (max-width: 760px) {
+    .page-header h1 {
+        font-size: 16px;
+    }
+}
+
+.align-right {
+    text-align: right;
+    color: aqua;
+    font-weight: bold;
+}
+
+.name-url-pair {
+    color:white;
+    text-align:center;
+    display: flex;
+    font-size: 52px;
+    border-style: solid;
+    background-color: darkgrey;
+    justify-content: center;
+}
+
+
+#content{
+    padding-top: 100px;
+}
+
+.content {
+    max-width: 1440px;
+    margin: 0 auto  ;
+    column-count: 2;
+}
+
+@media screen and (min-width: 600px) {
+    .content {
+        column-count: 2;
+    }
+}
+
+.column {
+    flex: 1;
+    /*float: left;*/
+    /*width: 50%;*/
+    /*padding: 10px;*/
+
+}
+
+/*#content {*/
+    /*padding: 60px;*/
+    /*margin-top: 80px;*/
+/*}*/
+#cat-name {
+    border: #8151b0 dotted;
+    /*margin: 5%;*/
+    padding-right: 10px;
+    /*background-color: red;*/
+}
+
+#cat-img {
+    display: flex;
+    width: 50%;
+    height: 50% ;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 3px solid darkgreen;
+    padding: 5px;
+
+}

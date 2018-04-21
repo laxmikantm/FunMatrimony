@@ -1,4 +1,5 @@
 
+
 /* ======= Model ======= */
 
 var model = {
@@ -6,7 +7,7 @@ var model = {
     cats: [
         {
             clickCount : 0,
-            name : 'Tabby',
+            name : 'Sweetie1',
             imgSrc : 'img/434164568_fea0ad4013_z.jpg',
             imgAttribution : 'https://www.flickr.com/photos/bigtallguy/434164568'
         },
@@ -33,6 +34,12 @@ var model = {
             name : 'Sleepy',
             imgSrc : 'img/9648464288_2516b35537_z.jpg',
             imgAttribution : 'https://www.flickr.com/photos/onesharp/9648464288'
+        },
+        {
+            clickCount: 0,
+            name : 'Tora',
+            imgSrc : 'img/J Tora.jpg',
+            imgAttribution : 'null'
         }
     ]
 };
@@ -40,7 +47,7 @@ var model = {
 
 /* ======= Octopus ======= */
 
-var octopus = {
+var controller = {
 
     init: function() {
         // set our current cat to the first one in the list
@@ -85,7 +92,7 @@ var catView = {
 
         // on click, increment the current cat's counter
         this.catImageElem.addEventListener('click', function(){
-            octopus.incrementCounter();
+            controller.incrementCounter();
         });
 
         // render this view (update the DOM elements with the right values)
@@ -94,9 +101,10 @@ var catView = {
 
     render: function() {
         // update the DOM elements with values from the current cat
-        var currentCat = octopus.getCurrentCat();
+        var currentCat = controller.getCurrentCat();
         this.countElem.textContent = currentCat.clickCount;
         this.catNameElem.textContent = currentCat.name;
+        this.catNameElem.style.color = "blue"; //So that we can highlight it.
         this.catImageElem.src = currentCat.imgSrc;
     }
 };
@@ -113,11 +121,19 @@ var catListView = {
 
     render: function() {
         var cat, elem, i;
-        // get the cats we'll be rendering from the octopus
-        var cats = octopus.getCats();
+        // get the cats we'll be rendering from the controller
+        var cats = controller.getCats();
 
         // empty the cat list
         this.catListElem.innerHTML = '';
+
+        var handler = function() {
+            var element = this; // will reference caller, can be any of the elems created in below loop
+            // get element id to determine which index of the cat Object in the cats Array we need
+            var cat = cats[ parseFloat( element.getAttribute("id"))];
+            controller.setCurrentCat(cat);
+            catView.render();
+        };
 
         // loop over the cats
         for (i = 0; i < cats.length; i++) {
@@ -133,10 +149,56 @@ var catListView = {
             //  of the cat variable to the click event function)
             elem.addEventListener('click', (function(catCopy) {
                 return function() {
-                    octopus.setCurrentCat(catCopy);
+                    controller.setCurrentCat(catCopy);
                     catView.render();
                 };
             })(cat));
+
+            // assign attribute id, it will reference the index of the cat in the Array (is current iterator)
+            elem.setAttribute("id", i.toString());
+            elem.addEventListener('click',handler);
+
+            // abstraction example of event dispatch system (e.g. internal "ublish-subscribe"
+            // var obj = {
+            //     addEventListener: function(type, fn) {
+            //         // register key "type"in "hashmap", assign fn as its value
+            //         this.handlers[type] = fn;
+            //     },
+            //     dispatchEvent: function(type) {
+            //         // retrieve registered function registered for given type
+            //         var fn = this.handlers[type];
+            //         fn.apply(this); // execute function IN THE SCOPE OF THIS OBJECT (calldr)
+            //     },
+            //     handlers: {} // poor mans hashmap
+            // };
+            // obj.addEventListener("foo", function() { console.warn("hello."); }
+            // obj.dispatchEvent( "foo"); // will log "hello
+
+            // var Human = function(name) {
+            //     var _name = name; // inner variable only accessible within this function
+            //     this.getName = function() {
+            //         console.warn(_name); // inner variable accessible as this function is within scope of higher order function
+            //     };
+            //     this.setName = function(name) {
+            //         _name = name; // inner variable accessible as this function is within scope of higher order function
+            //     }
+            // };
+            // var Laxmi = new Human("Laxmikant Somni");
+            // Laxmi._name; // undefined, scope variable _name not accessible outside of Human function context
+            // Laxmi.getName(); // "Laxmikant Somni", exposed function getName is defined within scope of Human function, can access _name
+
+
+
+            // alternative: use bind() keyword to bind function callback
+            // to a specific scope: in this loop each elem. that fires "click"
+            // will execute the callback function in the scope of whatever
+            // the value of cat was in this loops iteration
+            //
+            // elem.addEventListener('click', function(e) {
+            //     var catCopy = this;
+            //     controller.setCurrentCat(catCopy);
+            //     catView.render();
+            // }.bind(cat));
 
             // finally, add the element to the list
             this.catListElem.appendChild(elem);
@@ -145,4 +207,34 @@ var catListView = {
 };
 
 // make it go!
-octopus.init();
+controller.init();
+
+// // ES2017 inline goodness
+//
+// async function foo() {
+//     await fetchFromBackend();
+// }
+
+// old style
+
+var successCallback = function ()  {
+    console.log('done');
+    fetchFromBackend.removeEventListener("complete", successCallback);
+};
+
+function foo() {
+    fetchFromBackend.addEventListener("complete", successCallback );
+    console.log("foo executed");
+
+}
+
+function fetchFromBackend() {
+    // theoretical rest call
+    // which dispatches "complete" event on success
+}
+
+foo();
+
+
+
+
