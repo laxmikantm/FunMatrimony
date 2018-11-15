@@ -1,0 +1,21 @@
+function greeting() {
+  this.call();
+}
+
+var person = {
+  name: 'dani',
+  call: function () { console.log(this.name) },
+};
+//Then we'do
+greeting.bind(person)();
+
+//////////////////////////
+
+function times(number, callback) {
+  const result = [];
+  for (let index=0; index < number; index++) {
+    result.push(callback(index));
+  }
+
+  return result;
+}
